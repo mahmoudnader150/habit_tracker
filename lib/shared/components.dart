@@ -17,7 +17,7 @@ Widget defaultButton({
     borderRadius: BorderRadius.circular(
       radius,
     ),
-    color: background,
+    color: Colors.green[400],
   ),
   child: MaterialButton(
     onPressed:function,
@@ -54,13 +54,23 @@ Widget defaultFormField({
   obscureText: obscure,
   onTap: onTap,
   enabled: isClickable,
+
+ cursorColor:  Colors.green[400],
   decoration: InputDecoration(
     labelText: label,
+    labelStyle: TextStyle(
+      color: Colors.green[400],
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.green), // Green border when focused
+    ),
+
     suffixIcon: IconButton(
       icon: Icon(suffix),
       onPressed: suffixPressed,
+      color: Colors.green[400],
     ),
-    prefixIcon: Icon(prefix),
+    prefixIcon: Icon(prefix,color: Colors.green[400],),
     border: OutlineInputBorder(
     ),
   ),
@@ -88,7 +98,11 @@ void navigateAndFinish(context,widget)=> Navigator.pushAndRemoveUntil(
 Widget defaultTextButton({
   required VoidCallback? function,
   required String text
-})=>TextButton(onPressed: function, child: Text(text.toUpperCase()),);
+})=>TextButton(
+  onPressed: function,
+  child: Text(text.toUpperCase(),style: TextStyle(color: Colors.green[600]),),
+
+);
 
 void showToast({
   required String text,
@@ -98,7 +112,7 @@ void showToast({
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
-        backgroundColor:  Colors.cyanAccent,
+        backgroundColor:  Colors.green,
         textColor: Colors.white,
         fontSize: 16.0
     );

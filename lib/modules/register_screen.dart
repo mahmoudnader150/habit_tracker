@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/cubit/app_cubit.dart';
 import 'package:habit_tracker/cubit/register_cubit.dart';
+import 'package:habit_tracker/modules/login_screen.dart';
 import 'package:habit_tracker/shared/components.dart';
 import 'package:habit_tracker/states/register_states.dart';
 
@@ -114,8 +116,25 @@ class RegisterScreen extends StatelessWidget {
                           prefix: Icons.lock_outline
                       ),
                       SizedBox(height: 20,),
-                      defaultButton(function: (){
 
+                      defaultButton(function: ()async{
+                        if(formKey.currentState!.validate()) {
+                          final query = 'SELECT * FROM users WHERE email = ?';
+                          AppCubit.get(context).database;
+                          final List<Map<String, dynamic>> rows =  await AppCubit.get(context).database.rawQuery(query, [ '${emailController.text}']);
+
+                          if (rows.isNotEmpty) {
+                            showToast(text: "User already signed in");
+                          } else {
+                            AppCubit.get(context).insertToDatabase(
+                                email: emailController.text,
+                                username: usernameController.text,
+                                password: passwordController.text
+                            );
+                            navigateTo(context, LoginScreen());
+                            showToast(text: "Registered Successfully");
+                          }
+                        }
                       }, text: "REGISTER"),
 
                     ],

@@ -83,7 +83,11 @@ class LoginScreen extends StatelessWidget {
                             prefix: Icons.lock_outline
                         ),
                         SizedBox(height: 20,),
-                        defaultButton(function: (){}, text: "LOGIN"),
+                        defaultButton(function: (){
+
+
+
+                        }, text: "LOGIN"),
                         Row(
                           children: [
                             Text("Don't have an account?",style: TextStyle(fontWeight: FontWeight.bold),),
