@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/cubit/register_cubit.dart';
+import 'package:habit_tracker/shared/components.dart';
+import 'package:habit_tracker/states/register_states.dart';
 
 class RegisterScreen extends StatelessWidget {
 
   var emailController = TextEditingController();
+  var usernameController = TextEditingController();
   var passwordController = TextEditingController();
   var repeatPasswordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<>(
+    return BlocConsumer<RegisterCubit,RegisterStates>(
       listener: (context,state){},
       builder: (context,state){
         return Scaffold(
@@ -29,7 +34,7 @@ class RegisterScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "LOGIN",
+                        "REGISTER",
                         style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
@@ -37,7 +42,7 @@ class RegisterScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Login to add new habits",
+                        "Fill the form to signIn",
                         style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 16,
@@ -57,37 +62,62 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20,),
                       defaultFormField(
+                          controller: usernameController,
+                          type: TextInputType.emailAddress,
+                          validate: (value){
+                            if(value!.isEmpty) return "Please enter your username";
+                            return null;
+                          },
+                          label: "User name",
+                          prefix: Icons.title
+                      ),
+                      SizedBox(height: 20,),
+                      defaultFormField(
                           controller:passwordController ,
                           type: TextInputType.visiblePassword,
                           suffix: Icons.visibility_outlined ,
-                          onSubmit: (value){
-                            if(formKey.currentState!.validate()){
 
-                            }
-                          },
-                          obscure:LoginCubit.get(context).isPassword,
+                          obscure:RegisterCubit.get(context).isPassword,
                           suffixPressed: (){
-                            LoginCubit.get(context).changePasswordVisibility();
+                            RegisterCubit.get(context).changePasswordVisibility();
                           },
                           validate: (value){
                             if(value!.isEmpty){
                               return 'Password is too short';
+                            }
+                            if(value!=repeatPasswordController.text){
+                              return "Password does not match";
                             }
                           },
                           label:  'Password',
                           prefix: Icons.lock_outline
                       ),
                       SizedBox(height: 20,),
-                      defaultButton(function: (){}, text: "LOGIN"),
-                      Row(
-                        children: [
-                          Text("Don't have an account?",style: TextStyle(fontWeight: FontWeight.bold),),
-                          defaultTextButton(
-                              function: (){
-                              }, text:'register'
-                          )
-                        ],
-                      )
+                      defaultFormField(
+                          controller:repeatPasswordController  ,
+                          type: TextInputType.visiblePassword,
+                          suffix: Icons.visibility_outlined ,
+
+                          obscure:RegisterCubit.get(context).isRepeatPassword,
+                          suffixPressed: (){
+                            RegisterCubit.get(context).changeRepeatPasswordVisibility();
+                          },
+                          validate: (value){
+                            if(value!.isEmpty){
+                              return 'Password is too short';
+                            }
+                            if(value!=passwordController.text){
+                              return "Password does not match";
+                            }
+                          },
+                          label:  'Repeat Password',
+                          prefix: Icons.lock_outline
+                      ),
+                      SizedBox(height: 20,),
+                      defaultButton(function: (){
+
+                      }, text: "REGISTER"),
+
                     ],
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habit_tracker/cubit/login_cubit.dart';
+import 'package:habit_tracker/modules/register_screen.dart';
 import 'package:habit_tracker/shared/components.dart';
 import 'package:habit_tracker/states/login_states.dart';
 
@@ -88,6 +89,7 @@ class LoginScreen extends StatelessWidget {
                             Text("Don't have an account?",style: TextStyle(fontWeight: FontWeight.bold),),
                             defaultTextButton(
                                 function: (){
+                                  navigateTo(context, RegisterScreen());
                                 }, text:'register'
                             )
                           ],
