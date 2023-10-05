@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habit_tracker/cubit/app_cubit.dart';
 import 'package:habit_tracker/cubit/login_cubit.dart';
 import 'package:habit_tracker/cubit/register_cubit.dart';
-import 'package:habit_tracker/modules/home_screen.dart';
+
 import 'package:habit_tracker/modules/login_screen.dart';
 import 'package:habit_tracker/states/app_states.dart';
 

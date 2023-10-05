@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/cubit/app_cubit.dart';
 import 'package:habit_tracker/cubit/login_cubit.dart';
+import 'package:habit_tracker/layout/main_screen.dart';
 import 'package:habit_tracker/modules/register_screen.dart';
 import 'package:habit_tracker/shared/components.dart';
 import 'package:habit_tracker/states/login_states.dart';
@@ -10,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
+  bool validPassword = false;
   @override
   Widget build(BuildContext context) {
 
@@ -74,7 +76,7 @@ class LoginScreen extends StatelessWidget {
                             suffixPressed: (){
                               LoginCubit.get(context).changePasswordVisibility();
                             },
-                            validate: (value){
+                            validate: (value)  {
                               if(value!.isEmpty){
                                 return 'Password is too short';
                               }
@@ -84,9 +86,15 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 20,),
                         defaultButton(function: (){
-
-
-
+                           if(formKey.currentState!.validate()) {
+                             for(int i=0;i<AppCubit.get(context).users.length;i++){
+                               if(AppCubit.get(context).users[i].email==emailController.text &&AppCubit.get(context).users[i].password==passwordController.text){
+                                 showToast(text: "Welcome ${AppCubit.get(context).users[i].username} to Habit Tracker");
+                                 navigateTo(context, MainScreen());
+                               }
+                             }
+                             showToast(text: "Wrong email or password");
+                           }
                         }, text: "LOGIN"),
                         Row(
                           children: [
@@ -110,4 +118,5 @@ class LoginScreen extends StatelessWidget {
     );
 
   }
+
 }

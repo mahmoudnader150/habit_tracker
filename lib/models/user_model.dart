@@ -1,7 +1,7 @@
 class User{
-  final String username;
-  final String email;
-  final String password;
+ final String username;
+ final String email;
+ final String password;
 
   User({
   required this.username,
@@ -9,6 +9,7 @@ class User{
   required this.email,
 });
 
+  
 
 
 }

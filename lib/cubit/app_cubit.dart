@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/models/user_model.dart';
 import 'package:habit_tracker/states/app_states.dart';
 import 'package:habit_tracker/states/login_states.dart';
 import 'package:sqflite/sqflite.dart';
@@ -53,7 +54,7 @@ class  AppCubit extends Cubit<AppStates>{
       ).then((value) {
         print('$value inserted successfully');
         emit(AppInsertDatabaseState());
-        //getDataFromDatabase(database);
+        getDataFromDatabase(database);
       }).catchError((error) {
         print('Error When Inserting New Record ${error.toString()}');
       });
@@ -61,23 +62,26 @@ class  AppCubit extends Cubit<AppStates>{
     });
   }
 
-
+  List<User> users=[];
   void getDataFromDatabase(database)  {
-
+    users=[];
     emit(AppGetDatabaseLoadingState());
-    database.rawQuery('SELECT * FROM tasks').then((value){
-      // tasks = value;
-      // print(tasks);
-
+    database.rawQuery('SELECT * FROM users').then((value){
       value.forEach((element) {
-
-
+           users.add(User(
+               username: element['username'],
+               password: element['password'],
+               email: element['email'])
+           );
       });
 
       emit(AppGetDatabaseState());
     });
   }
 
-
-
 }
+
+
+
+
+
