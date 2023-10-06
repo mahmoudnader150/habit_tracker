@@ -158,9 +158,9 @@ class ProgressScreen extends StatelessWidget {
                       ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemBuilder: (context,index)=>buildHabitItem(Habit(name: "name", description: "description", userEmail: "userEmail",done: true)),
+                        itemBuilder: (context,index)=>buildHabitItem(AppCubit.get(context).habits[index]),
                         separatorBuilder: (context,index)=>SizedBox(height: 20,),
-                        itemCount:  7,
+                        itemCount:  AppCubit.get(context).habits.length,
                       )
                     ],
                   ),
@@ -172,16 +172,15 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget buildHabitItem(Habit habit){
+  Widget buildHabitItem(Map<String, dynamic> habit){
     return Material(
       elevation: 3,
-      shadowColor: habit.done?Colors.grey:Colors.green,
+      shadowColor: !(habit['done']!=null||habit['done']!=false)?Colors.grey:Colors.green,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0), // Customize the border radius
       ),
-      color: habit.done?Colors.green[400]:Colors.white,
+      color: !(habit['done']!=null||habit['done']!=false)?Colors.green[400]:Colors.white,
       child: Container(
-
         child: Row(
           children: [
             Padding(
@@ -190,7 +189,7 @@ class ProgressScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      habit.name,
+                     habit['name'],
                      style: TextStyle(
                        fontWeight: FontWeight.bold,
                        fontSize: 20,
@@ -199,7 +198,7 @@ class ProgressScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 5,),
                   Text(
-                    habit.description,
+                    habit['description'],
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,

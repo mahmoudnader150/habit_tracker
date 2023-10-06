@@ -50,10 +50,12 @@ class  AppCubit extends Cubit<AppStates>{
     emit(AppChangeBottomNavBarState());
   }
 
+  List<Map<String, dynamic>> habits = [];
+
   late Database database;
   void createDatabase() async {
     openDatabase(
-      'todo.db',
+      'habit.db',
       version: 1,
       onCreate: (database, version) {
         print('database created');
@@ -92,7 +94,7 @@ class  AppCubit extends Cubit<AppStates>{
     await database.transaction((txn) {
       txn
           .rawInsert(
-        'INSERT INTO habits(email, username, password) VALUES("$email", "$username", "$password")',
+        'INSERT INTO users(email, username, password) VALUES("$email", "$username", "$password")',
       ).then((value) {
         print('$value inserted successfully');
         emit(AppInsertDatabaseState());

@@ -32,6 +32,7 @@ class AddHabitScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Form(
+                  key: formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,9 +66,24 @@ class AddHabitScreen extends StatelessWidget {
                           prefix: Icons.view_headline_sharp
                       ),
                       SizedBox(height: 20,),
-                      defaultButton(function: (){
+                      defaultButton(function: ()async{
+                          if(formKey.currentState!.validate()) {
+                             AppCubit.get(context).insertHabitsToDatabase(
+                                 habitName: habitNameController.text,
+                                 habitDescription: habitDescController.text,
+                                 email: AppCubit.get(context).email
+                             );
 
-
+                             final query = 'SELECT * FROM habits WHERE user_email = ?';
+                             AppCubit.get(context).database;
+                             final List<Map<String, dynamic>> rows =  await AppCubit.get(context).database.rawQuery(query, [ '${AppCubit.get(context).email}']);
+                             if (rows.isNotEmpty) {
+                               AppCubit.get(context).habits = rows;
+                               showToast(text: "habit exists");
+                             } else {
+                               showToast(text: "habit not exists");
+                             }
+                          }
                       }, text: "Add Habit"),
                       SizedBox(height: 20,),
                       defaultButton(function: (){
