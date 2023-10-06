@@ -5,11 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 Widget defaultButton({
   double width = double.infinity,
-  Color background = Colors.blue,
+  Color background = Colors.green,
   bool isUpperCase = true,
   double radius = 10.0,
   required VoidCallback function,
   required String text,
+  Color textColor = Colors.white,
 })=> Container(
   width: width,
 
@@ -17,19 +18,21 @@ Widget defaultButton({
     borderRadius: BorderRadius.circular(
       radius,
     ),
-    color: Colors.green[400],
+    color: background,
   ),
   child: MaterialButton(
     onPressed:function,
     child: Text(
       "${isUpperCase?text.toUpperCase():text.toLowerCase()}",
       style: TextStyle(
-          color: Colors.white
+          color: textColor
       ),
     ),
 
   ),
 );
+
+
 //===================================================
 
 Widget defaultFormField({

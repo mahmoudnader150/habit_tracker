@@ -2,6 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/modules/add_habit_screen.dart';
+import 'package:habit_tracker/modules/progress_screen.dart';
+
+import 'package:habit_tracker/modules/show_habits_screen.dart';
 import 'package:habit_tracker/models/user_model.dart';
 import 'package:habit_tracker/states/app_states.dart';
 import 'package:habit_tracker/states/login_states.dart';
@@ -11,6 +15,40 @@ class  AppCubit extends Cubit<AppStates>{
 
   AppCubit():super(AppInitialState());
   static  AppCubit get(context) => BlocProvider.of(context);
+  int currentIndex = 0;
+  int dailyProgress = 0;
+
+
+  List<Widget> screens = [
+    ProgressScreen(),
+    AddHabitScreen(),
+    ShowHabitsScreen()
+  ];
+  String username = "";
+  String email = "";
+  String password = "";
+  User currentUser = User(username: 'username', password:'password', email: "email");
+
+  List<BottomNavigationBarItem> bottomItems = [
+    BottomNavigationBarItem(
+        icon: Icon(Icons.add_chart),
+        label: 'Progress'
+    ),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.add,),
+        label: 'Add',
+
+    ),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.menu),
+        label: 'Habits'
+    ),
+  ];
+
+  void changeIndex(index){
+    currentIndex = index;
+    emit(AppChangeBottomNavBarState());
+  }
 
   late Database database;
   void createDatabase() async {
@@ -18,11 +56,6 @@ class  AppCubit extends Cubit<AppStates>{
       'todo.db',
       version: 1,
       onCreate: (database, version) {
-        // id integer
-        // title String
-        // date String
-        // time String
-        // status String
         print('database created');
         database
             .execute(
@@ -32,12 +65,21 @@ class  AppCubit extends Cubit<AppStates>{
         }).catchError((error) {
           print('Error When Creating Table ${error.toString()}');
         });
+        database
+            .execute(
+            'CREATE TABLE habits (id INTEGER PRIMARY KEY, name TEXT, description TEXT, user_email TEXT )')
+            .then((value) {
+          print('table habits created');
+        }).catchError((error) {
+          print('Error When Creating Table ${error.toString()}');
+        });
       },
       onOpen: (database) {
         print('database opened');
       },
     ).then((value) {
       database = value;
+      getDataFromDatabase(database);
       emit(AppCreateDatabaseState());
     });
   }
@@ -50,7 +92,7 @@ class  AppCubit extends Cubit<AppStates>{
     await database.transaction((txn) {
       txn
           .rawInsert(
-        'INSERT INTO users(email, username, password) VALUES("$email", "$username", "$password")',
+        'INSERT INTO habits(email, username, password) VALUES("$email", "$username", "$password")',
       ).then((value) {
         print('$value inserted successfully');
         emit(AppInsertDatabaseState());
@@ -61,6 +103,27 @@ class  AppCubit extends Cubit<AppStates>{
       return Future(() => null);
     });
   }
+
+  insertHabitsToDatabase({
+    required String habitName,
+    required String habitDescription,
+    required String email,
+  }) async {
+    await database.transaction((txn) {
+      txn
+          .rawInsert(
+        'INSERT INTO habits(name, description, user_email) VALUES("$habitName", "$habitDescription", "$email")',
+      ).then((value) {
+        print('$value inserted successfully');
+        emit(AppInsertDatabaseState());
+      }).catchError((error) {
+        print('Error When Inserting New Record ${error.toString()}');
+      });
+      return Future(() => null);
+    });
+  }
+
+
 
   List<User> users=[];
   void getDataFromDatabase(database)  {

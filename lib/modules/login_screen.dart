@@ -90,7 +90,11 @@ class LoginScreen extends StatelessWidget {
                              for(int i=0;i<AppCubit.get(context).users.length;i++){
                                if(AppCubit.get(context).users[i].email==emailController.text &&AppCubit.get(context).users[i].password==passwordController.text){
                                  showToast(text: "Welcome ${AppCubit.get(context).users[i].username} to Habit Tracker");
-                                 navigateTo(context, MainScreen());
+                                 AppCubit.get(context).username = AppCubit.get(context).users[i].username;
+                                 AppCubit.get(context).email = AppCubit.get(context).users[i].email;
+                                 AppCubit.get(context).password = AppCubit.get(context).users[i].password;
+                                 navigateAndFinish(context, MainScreen());
+                                 return;
                                }
                              }
                              showToast(text: "Wrong email or password");

@@ -8,12 +8,21 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = AppCubit.get(context);
     return BlocConsumer<AppCubit,AppStates>(
       listener: (context,state){},
       builder: (context,state){
           return Scaffold(
-            appBar: AppBar(
-
+            body:  cubit.screens[cubit.currentIndex],
+            bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: cubit.currentIndex,
+                elevation: 0.0,
+                selectedItemColor: Colors.green[400],
+                onTap: (index) {
+                  cubit.changeIndex(index);
+                },
+                items:cubit.bottomItems
             ),
           );
       }

@@ -1,6 +1,6 @@
 class User{
  final String username;
- final String email;
+ late final String email;
  final String password;
 
   User({
