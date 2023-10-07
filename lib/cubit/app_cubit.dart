@@ -52,10 +52,35 @@ class  AppCubit extends Cubit<AppStates>{
   }
 
   List<Habit> habits = [];
+  List<Habit> doneHabits = [];
 
 
-  void setHabit(){
+  void setHabit(Habit habit){
+       if(habit.done){
+         doneHabits.remove(habit);
+         dailyProgress-=3;
+       }else{
+         doneHabits.add(habit);
+         dailyProgress+=3;
+       }
+       habit.done = !habit.done;
+      emit(AppCheckHabitState());
+  }
 
+  void deleteHabit(Habit habit) async{
+      habits.remove(habit);
+      // Define your condition in the WHERE clause.
+      final condition = 'name = ? AND user_email = ?'; // Replace 'column1' and 'column2' with the actual column names.
+      final conditionArgs = ['${habit.name}', '${habit.userEmail}']; // Replace these with the values to match in the conditions.
+
+      // Perform the deletion.
+      await database.delete(
+        'habits', // Replace 'yourTableName' with the name of your table.
+        where: condition,
+        whereArgs: conditionArgs,
+      );
+
+      emit(AppDeleteHabitState());
   }
 
 
