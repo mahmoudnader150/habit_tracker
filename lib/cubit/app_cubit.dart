@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/models/habit_model.dart';
 import 'package:habit_tracker/modules/add_habit_screen.dart';
 import 'package:habit_tracker/modules/progress_screen.dart';
 
@@ -50,7 +51,16 @@ class  AppCubit extends Cubit<AppStates>{
     emit(AppChangeBottomNavBarState());
   }
 
-  List<Map<String, dynamic>> habits = [];
+  List<Habit> habits = [];
+
+
+  void setHabit(){
+
+  }
+
+
+
+
 
   late Database database;
   void createDatabase() async {
@@ -82,6 +92,7 @@ class  AppCubit extends Cubit<AppStates>{
     ).then((value) {
       database = value;
       getDataFromDatabase(database);
+      getHabitsFromDatabase(database);
       emit(AppCreateDatabaseState());
     });
   }
@@ -117,6 +128,7 @@ class  AppCubit extends Cubit<AppStates>{
         'INSERT INTO habits(name, description, user_email) VALUES("$habitName", "$habitDescription", "$email")',
       ).then((value) {
         print('$value inserted successfully');
+        getHabitsFromDatabase(database);
         emit(AppInsertDatabaseState());
       }).catchError((error) {
         print('Error When Inserting New Record ${error.toString()}');
@@ -144,6 +156,21 @@ class  AppCubit extends Cubit<AppStates>{
     });
   }
 
+  void getHabitsFromDatabase(database)  {
+    habits=[];
+    emit(AppGetDatabaseLoadingState());
+    database.rawQuery('SELECT * FROM habits').then((value){
+      value.forEach((element) {
+        habits.add(Habit(
+            name: element['name'],
+            description: element['description'],
+            userEmail: element['user_email'])
+        );
+      });
+
+      emit(AppGetDatabaseState());
+    });
+  }
 }
 
 
