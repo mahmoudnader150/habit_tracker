@@ -37,7 +37,7 @@ class ShowHabitsScreen extends StatelessWidget {
               child: ListView.separated(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemBuilder: (context,index)=>buildHabitItem(AppCubit.get(context).habits[index]),
+                itemBuilder: (context,index)=>buildHabitItem(AppCubit.get(context).habits[index],context),
                 separatorBuilder: (context,index)=>SizedBox(height: 20,),
                 itemCount:  AppCubit.get(context).habits.length,
               ),
@@ -64,7 +64,7 @@ class ShowHabitsScreen extends StatelessWidget {
       },
     );
   }
-  Widget buildHabitItem(Habit habit){
+  Widget buildHabitItem(Habit habit,context){
     return Container(
       decoration: BoxDecoration(
         color: Colors.white, // Set the background color of the container
@@ -105,7 +105,8 @@ class ShowHabitsScreen extends StatelessWidget {
           Spacer(),
           IconButton(
               onPressed:(){
-
+                 AppCubit.get(context).deleteHabit(habit);
+                 showToast(text: "Deleted Successfully");
               },
               icon: Icon(Icons.delete,color: Colors.black54,)
           ),
