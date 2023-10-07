@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habit_tracker/cubit/app_cubit.dart';
 import 'package:habit_tracker/models/habit_model.dart';
+import 'package:habit_tracker/modules/edit_habit_screen.dart';
 import 'package:habit_tracker/modules/login_screen.dart';
 import 'package:habit_tracker/shared/components.dart';
 import 'package:habit_tracker/states/app_states.dart';
@@ -52,7 +53,7 @@ class ShowHabitsScreen extends StatelessWidget {
                     Text("No Habits added yet",
                        style: TextStyle(
                          fontWeight: FontWeight.bold,
-                         fontSize: 16,
+                         fontSize: 20,
                          color: Colors.grey
                        ),
                     )
@@ -113,7 +114,7 @@ class ShowHabitsScreen extends StatelessWidget {
           SizedBox(width: 4,),
           IconButton(
               onPressed:(){
-
+                 navigateTo(context, EditHabitScreen(habit: habit));
               },
               icon: Icon(Icons.edit_note_outlined,color: Colors.black54,)
           ),
