@@ -119,7 +119,11 @@ class ProgressScreen extends StatelessWidget {
                           child: Container(
                             child: HeatMap(
                               datasets: {
-                                DateTime(2023, 9, 6): 3,
+                                DateTime(2023, 9, 1): 3,
+                                DateTime(2023, 9, 2): 10,
+                                DateTime(2023, 9, 3): 7,
+                                DateTime(2023, 9, 4): 10,
+                                DateTime(2023, 9, 6): 10,
                                 DateTime(2023, 9, 7): 7,
                                 DateTime(2023, 9, 8): 10,
                                 DateTime(2023, 9, 9): 13,
@@ -158,7 +162,7 @@ class ProgressScreen extends StatelessWidget {
                       ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemBuilder: (context,index)=>buildHabitItem(AppCubit.get(context).habits[index]),
+                        itemBuilder: (context,index)=>buildHabitItem(AppCubit.get(context).habits[index],context),
                         separatorBuilder: (context,index)=>SizedBox(height: 20,),
                         itemCount:  AppCubit.get(context).habits.length,
                       )
@@ -172,14 +176,14 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget buildHabitItem(Map<String, dynamic> habit){
+  Widget buildHabitItem(Habit habit,context){
     return Material(
       elevation: 3,
-      shadowColor: !(habit['done']!=null||habit['done']!=false)?Colors.grey:Colors.green,
+      shadowColor: (AppCubit.get(context).doneHabits.contains(habit))?Colors.grey:Colors.green,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0), // Customize the border radius
       ),
-      color: !(habit['done']!=null||habit['done']!=false)?Colors.green[400]:Colors.white,
+      color: (AppCubit.get(context).doneHabits.contains(habit))?Colors.green[400]:Colors.white,
       child: Container(
         child: Row(
           children: [
@@ -189,7 +193,7 @@ class ProgressScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                     habit['name'],
+                    habit.name,
                      style: TextStyle(
                        fontWeight: FontWeight.bold,
                        fontSize: 20,
@@ -198,7 +202,7 @@ class ProgressScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 5,),
                   Text(
-                    habit['description'],
+                    habit.description,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
@@ -212,8 +216,9 @@ class ProgressScreen extends StatelessWidget {
             IconButton(
                 onPressed:(){
 
+                  AppCubit.get(context).setHabit(habit);
                 },
-                icon: Icon(Icons.check_box_outline_blank,color: Colors.black54,)
+                icon: (AppCubit.get(context).doneHabits.contains(habit))?Icon(Icons.check_box_outlined,color: Colors.black54,):Icon(Icons.check_box_outline_blank,color: Colors.black54,)
             )
           ],
         ),
