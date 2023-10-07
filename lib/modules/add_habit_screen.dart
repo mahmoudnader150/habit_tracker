@@ -68,31 +68,28 @@ class AddHabitScreen extends StatelessWidget {
                       SizedBox(height: 20,),
                       defaultButton(function: ()async{
                           if(formKey.currentState!.validate()) {
+                             for(int i=0;i<AppCubit.get(context).habits.length;i++){
+                                 if(habitNameController.text==AppCubit.get(context).habits[i].name) {
+                                   showToast(text: "you can not add same habit twice");
+                                   return;
+                                 }
+                             }
                              AppCubit.get(context).insertHabitsToDatabase(
                                  habitName: habitNameController.text,
                                  habitDescription: habitDescController.text,
                                  email: AppCubit.get(context).email
                              );
-
-                             final query = 'SELECT * FROM habits WHERE user_email = ?';
-                             AppCubit.get(context).database;
-                             final List<Map<String, dynamic>> rows =  await AppCubit.get(context).database.rawQuery(query, [ '${AppCubit.get(context).email}']);
-                             if (rows.isNotEmpty) {
-                               AppCubit.get(context).habits = rows;
-                               showToast(text: "habit exists");
-                             } else {
-                               showToast(text: "habit not exists");
-                             }
+                             print(AppCubit().habits);
+                             showToast(text: "Habit added");
+                             habitNameController.text = "";
+                             habitDescController.text = "";
                           }
                       }, text: "Add Habit"),
                       SizedBox(height: 20,),
                       defaultButton(function: (){
                          habitNameController.text = "";
                          habitDescController.text = "";
-
                       }, text: "Reset",
-
-
                       ),
                     ],
                   ),
