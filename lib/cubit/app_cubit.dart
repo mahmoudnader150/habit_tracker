@@ -54,7 +54,14 @@ class  AppCubit extends Cubit<AppStates>{
   List<Habit> habits = [];
   List<Habit> doneHabits = [];
 
-
+bool checkHabit(Habit habit){
+    for(int i=0;i<doneHabits.length;i++){
+      if(habit.name==doneHabits[i].name){
+        return true;
+      }
+    }
+    return false;
+}
   void setHabit(Habit habit){
        if(habit.done){
          doneHabits.remove(habit);
