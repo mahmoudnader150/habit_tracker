@@ -79,7 +79,7 @@ class AddHabitScreen extends StatelessWidget {
                                  habitDescription: habitDescController.text,
                                  email: AppCubit.get(context).email
                              );
-                             print(AppCubit().habits);
+                             print(AppCubit().doneHabits);
                              showToast(text: "Habit added");
                              habitNameController.text = "";
                              habitDescController.text = "";
