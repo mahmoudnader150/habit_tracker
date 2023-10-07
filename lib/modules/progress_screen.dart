@@ -30,6 +30,13 @@ class ProgressScreen extends StatelessWidget {
     return BlocConsumer<AppCubit,AppStates>(
         listener: (context,state){},
         builder: (context,state){
+          // for(int i=0;i<AppCubit.get(context).habits.length;i++){
+          //   for(int j=0;j<AppCubit.get(context).doneHabits.length;j++){
+          //     if(AppCubit.get(context).habits[i].name==AppCubit.get(context).doneHabits[j].name){
+          //
+          //     }
+          //   }
+          // }
           return SafeArea(
             child: Scaffold(
               backgroundColor: Colors.grey[200],
@@ -158,13 +165,28 @@ class ProgressScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30,),
-                      ListView.separated(
+                      SizedBox(height: 40,),
+                      (AppCubit.get(context).habits.length>0)?ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context,index)=>buildHabitItem(AppCubit.get(context).habits[index],context),
                         separatorBuilder: (context,index)=>SizedBox(height: 20,),
                         itemCount:  AppCubit.get(context).habits.length,
+                      ): Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.hourglass_empty_outlined,color: Colors.grey,size: 100,),
+                            SizedBox(height: 20,),
+                            Text("No Habits added yet",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.grey
+                              ),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -179,11 +201,11 @@ class ProgressScreen extends StatelessWidget {
   Widget buildHabitItem(Habit habit,context){
     return Material(
       elevation: 3,
-      shadowColor: (AppCubit.get(context).doneHabits.contains(habit))?Colors.grey:Colors.green,
+      shadowColor: (AppCubit.get(context).checkHabit(habit))?Colors.grey:Colors.green,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0), // Customize the border radius
       ),
-      color: (AppCubit.get(context).doneHabits.contains(habit))?Colors.green[400]:Colors.white,
+      color: (AppCubit.get(context).checkHabit(habit))?Colors.green[400]:Colors.white,
       child: Container(
         child: Row(
           children: [
@@ -217,8 +239,9 @@ class ProgressScreen extends StatelessWidget {
                 onPressed:(){
 
                   AppCubit.get(context).setHabit(habit);
+                  print(AppCubit.get(context).doneHabits);
                 },
-                icon: (AppCubit.get(context).doneHabits.contains(habit))?Icon(Icons.check_box_outlined,color: Colors.black54,):Icon(Icons.check_box_outline_blank,color: Colors.black54,)
+                icon:(AppCubit.get(context).checkHabit(habit))?Icon(Icons.check_box_outlined,color: Colors.black54,):Icon(Icons.check_box_outline_blank,color: Colors.black54,)
             )
           ],
         ),
