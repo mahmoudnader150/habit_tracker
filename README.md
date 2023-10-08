@@ -5,8 +5,11 @@ The Simple Habit Tracker App is a mobile application built with Flutter that hel
 # Features
 
 1-Create and manage habits.
+
 2-Record daily progress using a heat map.
+
 3-View habit completion statistics.
+
 4-Local data storage with Sqflite.
 
 ## Usage
